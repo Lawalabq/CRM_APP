@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import ListView
-from crm_website.forms import SignUpForm
+from crm_website.forms import SignUpForm, CustomerUpdateForm, CreateCustomer
 from .models import Customer
+
 
 # Create your views here.
 
@@ -44,3 +46,38 @@ def register_user(request):
         form = SignUpForm()
         print(form)
         return render(request, 'register.html', {'form': form})
+
+
+@login_required
+def individual_record(request, pk):
+    customer = Customer.objects.get(id=pk)
+
+    form = CustomerUpdateForm(instance=customer)
+    if request.method == "POST":
+        form = CustomerUpdateForm(request.POST, instance=customer)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CustomerUpdateForm(instance=customer)
+
+    return render(request, 'customer.html', {'customer': customer, 'form': form})
+
+
+@login_required
+def delete_customer(request, pk):
+    customer = Customer.objects.get(id=pk)
+    customer.delete()
+    messages.success(request, 'Successfully deleted')
+    return redirect('home')
+
+
+def create_customer(request):
+    if request.method == 'POST':
+        form = CreateCustomer(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = CreateCustomer(request.POST)
+    return render(request, 'new_customer.html', {'form': form})

@@ -22,4 +22,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register_user, name='register'),
     path('logout/', views.signout, name='logout'),
+    path('record/<int:pk>', views.individual_record, name='record'),
+    path('record/delete/<int:pk>', views.delete_customer, name='delete'),
+    path('create', views.create_customer, name='create'),
+
+
 ]

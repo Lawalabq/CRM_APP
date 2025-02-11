@@ -25,11 +25,14 @@
         <td>{{record.email}}</td>
         <td>{{record.phone}}</td>
         <td>{{record.country}}</td>
+        <td><a href="{%url 'record' record.id%}"> Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-
+  <a href="{%url 'create'%}"
+    ><button type="button" class="btn btn-primary">Create Customer</button></a
+  >
   {% endif %} {%else%}
   <form method="POST" action="{%url 'home' %}">
     {%csrf_token%}
